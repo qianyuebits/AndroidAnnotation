@@ -7,15 +7,15 @@ AndroidAnnotation
 ##Project design
 项目将为在Android Framework提供的Activity、Fragment、普通Class等之间添加一层注解组件，开发者继承这些组件，即可使用框架定义的注解进行项目开发。
 
+##Project Done
+1. 为Activity，Fragment，FragmentActivity & 普通Class添加有关R.id的注解
 
 ##Project Todo
-1. 为Activity提供注解
-2. 为Fragment提供注解
-3. 为普通class提供注解
+1. 为View添加事件注解
 
 
 ##Project Doing
-为Activity提供注解
+为View添加事件注解
 
 
 ##How to use
