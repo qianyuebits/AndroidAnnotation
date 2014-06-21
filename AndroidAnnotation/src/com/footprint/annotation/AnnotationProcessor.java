@@ -9,6 +9,9 @@ import android.view.View;
 public class AnnotationProcessor {
 	private static final String ROOT_VIEW = "rootView";
 	
+	/**
+	 * 为Activity以及其子类注解
+	 * */
 	public static void processActivity(Activity activity){
 		Field[] fields = activity.getClass().getDeclaredFields();
 		View rootView = null;
@@ -71,6 +74,38 @@ public class AnnotationProcessor {
 				try {
 					field.setAccessible(true);
 					field.set(activity, view);//设置属性
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public static void processObject(Object obj, View view){
+		Field[] fields = obj.getClass().getDeclaredFields();
+		
+		for(Field field : fields){			
+			Annotation[] annos = field.getAnnotations();
+			
+			if(annos.length < 0)
+				continue;
+			
+			if(annos[0] instanceof ViewAnno) {
+				ViewAnno viewAnno = (ViewAnno) annos[0];
+				// Use field name if name not specified
+				int id = viewAnno.id();
+				if(id < 0)
+					throw new IllegalArgumentException("AndroidAnnotation: view id < 0");
+				
+				View subView = view.findViewById(id);
+				
+				try {
+					field.setAccessible(true);
+					field.set(obj, subView);
 				} catch (IllegalAccessException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
