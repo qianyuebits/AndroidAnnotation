@@ -8,11 +8,11 @@ AndroidAnnotation
 项目将为在Android Framework提供的Activity、Fragment、普通Class等之间添加一层注解组件，开发者继承这些组件，即可使用框架定义的注解进行项目开发。
 
 ##Project Done
-1. 为Activity，Fragment，FragmentActivity & 普通Class添加有关R.id的注解，如下所示。继承这些类即可实现属性注解以及添加常用事件功能。
+1. 为Activity，Fragment，FragmentActivity & 普通Class添加有关R.id的注解，如下所示。继承这些类即可实现属性注解以及添加常用事件功能。  
 	>AnnotationActivity:Activity封装类;   
 	>AnnotationFragmentActivity:FragmentActivity封装类;   
 	>AnnotationFragment:Fragment封装类;   
-	>AnnotationObject:普通Class封装类;  
+	>AnnotationObject:普通Class封装类; 
 2. 为View添加点击事件;
 
 
