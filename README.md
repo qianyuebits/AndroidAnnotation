@@ -18,6 +18,10 @@ AndroidAnnotation
 为Activity提供注解
 
 
+##How to use
+下载项目bin文件夹中的androidannotation.jar放入开发项目的libs文件夹下面即可。
+
+
 ##Attentation
 - Activity都需要有一个属性叫做rootView，并且做出注解，框架会自动设置rootView作为setContentView()的参数；或者开发者可以不去设置该属性，而是在调用super.onCreate(savedInstanceState)之前调用setContentView()设置视图；设置了rootView就会以rootView为准；
 - Fragment同上；
