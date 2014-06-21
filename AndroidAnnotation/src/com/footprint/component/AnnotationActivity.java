@@ -1,5 +1,7 @@
 package com.footprint.component;
 
+import com.footprint.annotation.AnnotationProcessor;
+
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -12,5 +14,6 @@ public class AnnotationActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		AnnotationProcessor.processActivity(this);
 	}
 }
