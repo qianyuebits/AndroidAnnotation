@@ -13,7 +13,25 @@ AndroidAnnotation
 
 
 ##How to use
-下载项目bin文件夹中的androidannotation.jar放入开发项目的libs文件夹下面即可。
+下载项目bin文件夹中的androidannotation.jar放入开发项目的libs文件夹下面即可，示例：
+    
+	public class MainActivity extends AnnotationActivity {
+	
+		@ViewAnno(id = R.id.dataButton, click="switchClick")
+		Button dataButton;
+	
+		@Override
+		protected void onCreate(Bundle savedInstanceState) {
+			setContentView(R.layout.activity_main);
+			super.onCreate(savedInstanceState);
+		}
+	
+		public void switchClick(View view){
+			Intent intent = new Intent();
+			intent.setClass(MainActivity.this, SecondActivity.class);
+			startActivity(intent);
+		}
+	}
 
 
 ##Attentation
