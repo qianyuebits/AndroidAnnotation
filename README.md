@@ -35,5 +35,6 @@ AndroidAnnotation
 
 
 ##Attentation
-- Activity都需要有一个属性叫做rootView，并且做出注解，框架会自动设置rootView作为setContentView()的参数；或者开发者可以不去设置该属性，而是在调用super.onCreate(savedInstanceState)之前调用setContentView()设置视图；设置了rootView就会以rootView为准;
-- Fragment同上;
+- Activity需要满足两个条件之一：1）有一个属性叫做rootView，并且做出注解，框架会自动设置rootView作为setContentView()的参数；2）或者开发者可以不去设置该属性，而是在调用super.onCreate(savedInstanceState)之前调用setContentView()设置视图。同时设置设置以rootView为准;
+- FragmentActivity同上;
+- Fragment则需要实现两个抽象函数，一个返回根View的id，一个是在所有的View被实例化之后进行回调的函数，前者必须要实现;
