@@ -50,43 +50,42 @@ public class AnnotationProcessor {
 			}
 		}
 		
-		for(Field field : fields){
-			if(field.getName().equals(ROOT_VIEW)){
-				continue;
-			}
-			
-			Annotation[] annos = field.getAnnotations();
-			
-			if(annos.length < 0)
-				continue;
-			
-			if(annos[0] instanceof ViewAnno) {
-				ViewAnno viewAnno = (ViewAnno) annos[0];
-				// Use field name if name not specified
-				int id = viewAnno.id();
-				if(id < 0)
-					throw new IllegalArgumentException("AndroidAnnotation: view id < 0");
+		if(rootView != null)
+			processObject(activity, rootView);
+		else{
+			for(Field field : fields){
+				Annotation[] annos = field.getAnnotations();
 				
-				View view = null;
-				if(rootView == null)
-					view = activity.findViewById(id);
-				else
-					view = rootView.findViewById(id);
+				if(annos.length < 0)
+					continue;
 				
-				try {
-					field.setAccessible(true);
-					field.set(activity, view);//设置属性
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(annos[0] instanceof ViewAnno) {
+					ViewAnno viewAnno = (ViewAnno) annos[0];
+					// Use field name if name not specified
+					int id = viewAnno.id();
+					if(id < 0)
+						throw new IllegalArgumentException("AndroidAnnotation: view id < 0");
+					
+					View view = activity.findViewById(id);
+					
+					try {
+						field.setAccessible(true);
+						field.set(activity, view);//设置属性
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
 	}
 	
+	/**
+	 * 当某个Object的属性来自于某个View的子View的时候，该方法提供注解过程
+	 * */
 	public static void processObject(Object obj, View view){
 		Field[] fields = obj.getClass().getDeclaredFields();
 		
@@ -100,6 +99,9 @@ public class AnnotationProcessor {
 				ViewAnno viewAnno = (ViewAnno) annos[0];
 				// Use field name if name not specified
 				int id = viewAnno.id();
+				if(id == view.getId())//表示就是组件本身
+					continue;
+				
 				if(id < 0)
 					throw new IllegalArgumentException("AndroidAnnotation: view id < 0");
 				
