@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 /**
  * 继承此类的Fragment都可以使用注解实例化属性。但是必须实现两个抽象方法
- * 同时满足这两个条件的时候，以rootView为准
  * */
 public abstract class AnnotationFragment extends Fragment{
 	private int contentViewId = 0;
@@ -32,12 +31,12 @@ public abstract class AnnotationFragment extends Fragment{
 	}
 	
 	/**
-	 * 当有属性rootView并且实现注解的时候，可以返回任意值
+	 * 实现该方法，返回Fragment的contentViewId
 	 * */
 	abstract protected int getContentView();
 	
 	/**
-	 * View全部准备好的时候，回调
+	 * 所有的注解View被实例化后调用
 	 * */
 	abstract protected void onViewReady();
 }
