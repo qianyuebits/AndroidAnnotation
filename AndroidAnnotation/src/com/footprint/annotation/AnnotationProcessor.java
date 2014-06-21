@@ -2,11 +2,18 @@ package com.footprint.annotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 
 public class AnnotationProcessor {
 	private static final String ROOT_VIEW = "rootView";
@@ -44,7 +51,7 @@ public class AnnotationProcessor {
 					} catch (IllegalArgumentException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}					
 				}
 				break;
 			}
@@ -78,10 +85,44 @@ public class AnnotationProcessor {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
+					String click = viewAnno.click();
+					if(!TextUtils.isEmpty(click)){
+						try {
+							Method method = activity.getClass().getDeclaredMethod(click, View.class);
+							if(!method.isAccessible())
+								method.setAccessible(true);
+							addClickListener(activity, view, method);
+						} catch (NoSuchMethodException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 		}
 	}
+	
+	private static void addClickListener(final Object obj, final View view, final Method m){
+        view.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				try {
+					m.invoke(obj, view);
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+        });
+    }
 	
 	/**
 	 * 当某个Object的属性来自于某个View的子View的时候，该方法提供注解过程
@@ -116,6 +157,19 @@ public class AnnotationProcessor {
 				} catch (IllegalArgumentException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}
+				
+				String click = viewAnno.click();
+				if(!TextUtils.isEmpty(click)){
+					try {
+						Method method = obj.getClass().getDeclaredMethod(click, View.class);
+						if(!method.isAccessible())
+							method.setAccessible(true);
+						addClickListener(obj, view, method);
+					} catch (NoSuchMethodException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}

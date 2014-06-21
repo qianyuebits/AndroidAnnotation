@@ -12,4 +12,5 @@ import java.lang.annotation.*;
 public @interface ViewAnno {
 	/** the id for view */
 	public int id() default -1;
+	public String click() default "";
 }
