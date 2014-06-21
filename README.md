@@ -9,10 +9,10 @@ AndroidAnnotation
 
 ##Project Done
 1. 为Activity，Fragment，FragmentActivity & 普通Class添加有关R.id的注解，如下所示。继承这些类即可实现属性注解以及添加常用事件功能。
-	>-  AnnotationActivity:Activity封装类;   
-	>-  AnnotationFragmentActivity:FragmentActivity封装类;   
-	>-  AnnotationFragment:Fragment封装类;   
-	>-  AnnotationObject:普通Class封装类;  
+	>AnnotationActivity:Activity封装类;   
+	>AnnotationFragmentActivity:FragmentActivity封装类;   
+	>AnnotationFragment:Fragment封装类;   
+	>AnnotationObject:普通Class封装类;  
 2. 为View添加点击事件;
 
 
