@@ -1,12 +1,14 @@
 package com.footprint.annotation;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -78,6 +80,9 @@ public class AnnotationProcessor {
 			if(annos.length <= 0)
 				continue;
 			
+			if(!field.isAccessible())
+				field.setAccessible(true);
+			
 			if(annos[0] instanceof ViewAnno) {
 				ViewAnno viewAnno = (ViewAnno) annos[0];
 
@@ -91,7 +96,6 @@ public class AnnotationProcessor {
 				View subView = viewObj.findViewById(id);
 				
 				try {
-					field.setAccessible(true);
 					field.set(annoObj, subView);
 				} catch (IllegalAccessException e) {
 					// TODO Auto-generated catch block
@@ -102,6 +106,14 @@ public class AnnotationProcessor {
 				}
 				
 				checkListener(annoObj, subView, viewAnno.click());
+			}else if(annos[0] instanceof BeanAnno){
+				Class cl = field.getType();
+				Log.d("LQM", cl.getName());
+				try {
+					field.set(annoObj, cl.newInstance());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
