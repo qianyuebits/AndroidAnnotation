@@ -1,7 +1,7 @@
 AndroidAnnotation
 =================
 
-为Android开发提供注解框架，去除Android中反复出现的findViewById等代码。同时对点击事件等最常用事件进行View与事件函数的解耦,不需要去重复太多代码。框架是轻量型的，只针对最常用情形进行注解实现。
+为Android开发提供注解框架，去除Android中反复出现的findViewById等代码。同时对点击事件等最常用事件进行View与事件函数的解耦,不需要去重复太多代码。框架是轻量型的，只有10K左右，只针对最常用情形进行注解实现。
 
 
 ##Project Design
