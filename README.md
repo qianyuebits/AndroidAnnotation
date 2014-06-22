@@ -26,22 +26,47 @@ AndroidAnnotation
 		@ViewAnno(id = R.id.dataButton, click="switchClick")
 		Button dataButton;//自动实例化 & 添加点击事件
 	
+		@ViewAnno(id = R.layout.activity_main)
+		View rootView;//根View
+	
 		@BeanAnno
 		Hello hello;//自动实例化
 
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
-			setContentView(R.layout.activity_main);
 			super.onCreate(savedInstanceState);
+		
+			Res res = new Res(this, null);
+			dataButton.setBackgroundColor(res.backColor);
 		}
 	
 		public void switchClick(View view){
+			hello.print();//测试代码，表示可以实例化bean
 			Intent intent = new Intent();
 			intent.setClass(MainActivity.this, SecondActivity.class);
 			startActivity(intent);
 		}
+
+		public class Res extends AnnotationObject{
+			@ColorAnno(color = R.color.test)
+			int backColor;
+
+			@DimenAnno(dimen = R.dimen.activity_horizontal_margin)
+			int dimen;
+
+			@StringAnno(string = R.string.app_name)
+			String str;
+
+			@DrawableAnno(drawable = R.drawable.ic_launcher)
+			Drawable drawable;
+		
+			public Res(Activity context, View view) {
+				super(context, null);
+			}
+		}
 	}
 
+代码展示了各种所有注解的使用方式。其中Res类既可以作为内部类，也可以作为外部类。
 
 ##Attentation
 - Activity需要满足两个条件之一：1）有一个属性叫做rootView，并且做出注解，框架会自动设置rootView作为setContentView()的参数；2）或者开发者可以不去设置该属性，而是在调用super.onCreate(savedInstanceState)之前调用setContentView()设置视图。同时设置设置以rootView为准;
