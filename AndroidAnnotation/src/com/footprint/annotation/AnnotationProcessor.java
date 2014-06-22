@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.footprint.annointerface.GetView;
+
 public class AnnotationProcessor {
 	private static final String ROOT_VIEW = "rootView";
 	
@@ -17,6 +19,14 @@ public class AnnotationProcessor {
 	 * 为Activity以及其子类注解
 	 * */
 	public static void processActivity(Activity activity){
+		checkRootViewForActivity(activity);
+		processAnnotation(activity, ((GetView)activity).getContentView());
+	}
+	
+	/**
+	 * 检测Activity的rootView属性并设置
+	 * */
+	private static void checkRootViewForActivity(Activity activity){
 		Field[] fields = activity.getClass().getDeclaredFields();
 		View rootView = null;
 		
@@ -36,6 +46,7 @@ public class AnnotationProcessor {
 						throw new IllegalArgumentException("AndroidAnnotation: view id < 0");
 					
 					rootView = activity.getLayoutInflater().inflate(id, null);
+					
 					try {
 						field.setAccessible(true);
 						field.set(activity, rootView);//设置属性
@@ -51,49 +62,63 @@ public class AnnotationProcessor {
 				break;
 			}
 		}
+	}
+	
+	/**
+	 * 为某个类的属性处理所有的Annotation
+	 * @param annoObj 带有注解属性的Obj
+	 * @param viewObj 可以获取View的Obj
+	 * */
+	private static void processAnnotation(Object annoObj, View viewObj){
+		Field[] fields = annoObj.getClass().getDeclaredFields();
 		
-		if(rootView != null)
-			processObject(activity, rootView);
-		else{
-			for(Field field : fields){
-				Annotation[] annos = field.getAnnotations();
-				
-				if(annos.length <= 0)
+		for(Field field : fields){	
+			Annotation[] annos = field.getAnnotations();
+			
+			if(annos.length <= 0)
+				continue;
+			
+			if(annos[0] instanceof ViewAnno) {
+				ViewAnno viewAnno = (ViewAnno) annos[0];
+
+				int id = viewAnno.id();
+				if(id == viewObj.getId())//表示就是组件本身
 					continue;
 				
-				if(annos[0] instanceof ViewAnno) {
-					ViewAnno viewAnno = (ViewAnno) annos[0];
-					// Use field name if name not specified
-					int id = viewAnno.id();
-					if(id < 0)
-						throw new IllegalArgumentException("AndroidAnnotation: view id < 0");
-					
-					View view = activity.findViewById(id);
-					
-					try {
-						field.setAccessible(true);
-						field.set(activity, view);//设置属性
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-					String click = viewAnno.click();
-					if(!TextUtils.isEmpty(click)){
-						try {
-							Method method = activity.getClass().getDeclaredMethod(click, View.class);
-							if(!method.isAccessible())
-								method.setAccessible(true);
-							addClickListener(activity, view, method);
-						} catch (NoSuchMethodException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
+				if(id < 0)
+					throw new IllegalArgumentException("AndroidAnnotation: view id < 0");
+				
+				View subView = viewObj.findViewById(id);
+				
+				try {
+					field.setAccessible(true);
+					field.set(annoObj, subView);
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+				
+				checkListener(annoObj, subView, viewAnno.click());
+			}
+		}
+	}
+	
+	/**
+	 * 检测注解中有没有事件，如果有，则添加
+	 * */
+	private static void checkListener(Object obj, View view, String click){
+		if(!TextUtils.isEmpty(click)){
+			try {
+				Method method = obj.getClass().getDeclaredMethod(click, View.class);
+				if(!method.isAccessible())
+					method.setAccessible(true);
+				addClickListener(obj, view, method);
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -123,50 +148,6 @@ public class AnnotationProcessor {
 	 * 当某个Object的属性来自于某个View的子View的时候，该方法提供注解过程
 	 * */
 	public static void processObject(Object obj, View view){
-		Field[] fields = obj.getClass().getDeclaredFields();
-		
-		for(Field field : fields){			
-			Annotation[] annos = field.getAnnotations();
-			
-			if(annos.length <= 0)
-				continue;
-			
-			if(annos[0] instanceof ViewAnno) {
-				ViewAnno viewAnno = (ViewAnno) annos[0];
-				// Use field name if name not specified
-				int id = viewAnno.id();
-				if(id == view.getId())//表示就是组件本身
-					continue;
-				
-				if(id < 0)
-					throw new IllegalArgumentException("AndroidAnnotation: view id < 0");
-				
-				View subView = view.findViewById(id);
-				
-				try {
-					field.setAccessible(true);
-					field.set(obj, subView);
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				String click = viewAnno.click();
-				if(!TextUtils.isEmpty(click)){
-					try {
-						Method method = obj.getClass().getDeclaredMethod(click, View.class);
-						if(!method.isAccessible())
-							method.setAccessible(true);
-						addClickListener(obj, view, method);
-					} catch (NoSuchMethodException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		}
+		processAnnotation(obj, view);
 	}
 }
