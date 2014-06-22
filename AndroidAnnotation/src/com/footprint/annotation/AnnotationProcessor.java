@@ -141,6 +141,15 @@ public class AnnotationProcessor {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}else if(annos[0] instanceof StringAnno){
+				StringAnno anno = (StringAnno)annos[0];
+				int stringId = anno.string();
+				checkoutId(stringId);
+				try {
+					field.set(annoObj, context.getResources().getString(stringId));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
