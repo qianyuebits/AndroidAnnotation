@@ -25,7 +25,7 @@ public abstract class AnnotationFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(contentViewId, null);
-		AnnotationProcessor.processObject(this, rootView);
+		AnnotationProcessor.processObject(this, rootView, this.getActivity());
 		onViewReady();
 		return rootView;
 	}

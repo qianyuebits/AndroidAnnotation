@@ -15,9 +15,8 @@ AndroidAnnotation
 	>AnnotationObject:普通Class封装类; 
 2. 为View添加点击事件;
 3. 添加Bean注解，要求Bean有一个不带参数的构造函数;
+4. 对资源做出注解，包括：color，dimen，drawable
 
-## Project To Do
-支持多个注解，从而为一个View注解添加多个事件做准备。
 
 ##How To Use
 下载项目bin文件夹中的androidannotation.jar放入开发项目的libs文件夹下面即可，示例：

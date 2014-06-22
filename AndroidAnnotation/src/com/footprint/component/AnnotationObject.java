@@ -1,5 +1,7 @@
 package com.footprint.component;
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -19,11 +21,11 @@ import com.footprint.annotation.AnnotationProcessor;
  * */
 public class AnnotationObject extends Object{
 	
-	public AnnotationObject(View view){
-		AnnotationProcessor.processObject(this, view);
+	public AnnotationObject(Activity context, View view){
+		AnnotationProcessor.processObject(this, view, context);
 	}
 	
-	public AnnotationObject(LayoutInflater inflater, int viewResource){
-		this(inflater.inflate(viewResource, null));
+	public AnnotationObject(Activity context, int viewResource){
+		this(context, context.getLayoutInflater().inflate(viewResource, null));
 	}
 }

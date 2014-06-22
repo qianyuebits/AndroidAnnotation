@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import android.app.Activity;
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +23,7 @@ public class AnnotationProcessor {
 	 * */
 	public static void processActivity(Activity activity){
 		checkRootViewForActivity(activity);
-		processAnnotation(activity, ((GetView)activity).getContentView());
+		processAnnotation(activity, ((GetView)activity).getContentView(), activity);
 	}
 	
 	/**
@@ -71,7 +72,7 @@ public class AnnotationProcessor {
 	 * @param annoObj 带有注解属性的Obj
 	 * @param viewObj 可以获取View的Obj
 	 * */
-	private static void processAnnotation(Object annoObj, View viewObj){
+	private static void processAnnotation(Object annoObj, View viewObj, Context context){
 		Field[] fields = annoObj.getClass().getDeclaredFields();
 		
 		for(Field field : fields){	
@@ -90,8 +91,7 @@ public class AnnotationProcessor {
 				if(id == viewObj.getId())//表示就是组件本身
 					continue;
 				
-				if(id < 0)
-					throw new IllegalArgumentException("AndroidAnnotation: view id < 0");
+				checkoutId(id);
 				
 				View subView = viewObj.findViewById(id);
 				
@@ -111,6 +111,33 @@ public class AnnotationProcessor {
 				Log.d("LQM", cl.getName());
 				try {
 					field.set(annoObj, cl.newInstance());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else if(annos[0] instanceof DimenAnno){
+				DimenAnno anno = (DimenAnno)annos[0];
+				int dimenId = anno.dimen();
+				checkoutId(dimenId);
+				try {
+					field.set(annoObj, context.getResources().getDimensionPixelSize(dimenId));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else if(annos[0] instanceof ColorAnno){
+				ColorAnno anno = (ColorAnno)annos[0];
+				int colorId = anno.color();
+				checkoutId(colorId);
+				try {
+					field.set(annoObj, context.getResources().getColor(colorId));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else if(annos[0] instanceof DrawableAnno){
+				DrawableAnno anno = (DrawableAnno)annos[0];
+				int drawableId = anno.drawable();
+				checkoutId(drawableId);
+				try {
+					field.set(annoObj, context.getResources().getDrawable(drawableId));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -156,10 +183,15 @@ public class AnnotationProcessor {
         });
     }
 	
+	private static void checkoutId(int id){
+		if(id < 0)
+			throw new IllegalArgumentException("AndroidAnnotation: view id < 0");
+	}
+	
 	/**
 	 * 当某个Object的属性来自于某个View的子View的时候，该方法提供注解过程
 	 * */
-	public static void processObject(Object obj, View view){
-		processAnnotation(obj, view);
+	public static void processObject(Object obj, View view, Context context){
+		processAnnotation(obj, view, context);
 	}
 }
