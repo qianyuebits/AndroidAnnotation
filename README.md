@@ -15,7 +15,7 @@ AndroidAnnotation
 	>AnnotationObject:普通Class封装类; 
 2. 为View添加点击事件;
 3. 添加Bean注解，要求Bean有一个不带参数的构造函数;
-4. 对资源做出注解，包括：color，dimen，drawable
+4. 对资源做出注解，包括：color，dimen，drawable，string;
 
 
 ##How To Use
