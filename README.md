@@ -49,16 +49,16 @@ AndroidAnnotation
 
 		public class Res extends AnnotationObject{
 			@ColorAnno(color = R.color.test)
-			int backColor;
+			int backColor;//color资源
 
 			@DimenAnno(dimen = R.dimen.activity_horizontal_margin)
-			int dimen;
+			int dimen;//dimen资源
 
 			@StringAnno(string = R.string.app_name)
-			String str;
+			String str;//string资源
 
 			@DrawableAnno(drawable = R.drawable.ic_launcher)
-			Drawable drawable;
+			Drawable drawable;//drawable资源
 		
 			public Res(Activity context, View view) {
 				super(context, null);
