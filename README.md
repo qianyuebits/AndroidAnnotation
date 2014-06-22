@@ -66,7 +66,7 @@ AndroidAnnotation
 		}
 	}
 
-代码展示了各种所有注解的使用方式。其中Res类既可以作为内部类，也可以作为外部类。
+代码展示了多种注解的使用方式。其中Res类既可以作为内部类，也可以作为外部类。
 
 ##Attentation
 - Activity需要满足两个条件之一：1）有一个属性叫做rootView，并且做出注解，框架会自动设置rootView作为setContentView()的参数；2）或者开发者可以不去设置该属性，而是在调用super.onCreate(savedInstanceState)之前调用setContentView()设置视图。同时设置设置以rootView为准;
