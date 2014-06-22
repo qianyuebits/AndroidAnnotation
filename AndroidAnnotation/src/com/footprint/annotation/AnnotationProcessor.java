@@ -24,7 +24,7 @@ public class AnnotationProcessor {
 			if(field.getName().equals(ROOT_VIEW)){
 				Annotation[] annos = field.getAnnotations();
 				
-				if(annos.length < 0)
+				if(annos.length <= 0)
 					throw new IllegalArgumentException("AndroidAnnotation: no annotation for field \""+ ROOT_VIEW + "\"");
 				
 				if(annos[0] instanceof ViewAnno) {
@@ -58,7 +58,7 @@ public class AnnotationProcessor {
 			for(Field field : fields){
 				Annotation[] annos = field.getAnnotations();
 				
-				if(annos.length < 0)
+				if(annos.length <= 0)
 					continue;
 				
 				if(annos[0] instanceof ViewAnno) {
@@ -128,7 +128,7 @@ public class AnnotationProcessor {
 		for(Field field : fields){			
 			Annotation[] annos = field.getAnnotations();
 			
-			if(annos.length < 0)
+			if(annos.length <= 0)
 				continue;
 			
 			if(annos[0] instanceof ViewAnno) {
